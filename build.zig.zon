@@ -1,0 +1,16 @@
+.{
+    .name = .sdl,
+    .fingerprint = 0xec638ccbd153dfcb,
+    .version = "0.1.0",
+    .dependencies = .{
+        .sdl = .{
+            .url = "https://github.com/allyourcodebase/SDL3/archive/refs/heads/main.tar.gz",
+            .hash = "sdl-0.0.0-i4QD0Up9qQCLBJcPR_YpCtGG1hSdL1QiD_OXw4uO5Pi1",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}

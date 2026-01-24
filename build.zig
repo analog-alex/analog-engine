@@ -20,6 +20,18 @@ pub fn build(b: *std.Build) void {
 
     exe.linkLibrary(sdl_dep.artifact("SDL3"));
 
+    // Add SDL3_gfx source files
+    // Use -fwrapv to make signed integer overflow well-defined (wrapping behavior)
+    exe.addCSourceFile(.{
+        .file = b.path("vendor/sdl3_gfx/SDL3_gfxPrimitives.c"),
+        .flags = &.{ "-std=c99", "-fwrapv", "-fno-sanitize=undefined" },
+    });
+    exe.addCSourceFile(.{
+        .file = b.path("vendor/sdl3_gfx/SDL3_rotozoom.c"),
+        .flags = &.{ "-std=c99", "-fwrapv", "-fno-sanitize=undefined" },
+    });
+    exe.addIncludePath(b.path("vendor/sdl3_gfx"));
+
     b.installArtifact(exe);
 
     const run_cmd = b.addRunArtifact(exe);

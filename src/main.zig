@@ -1,15 +1,20 @@
 const std = @import("std");
-const c = @cImport({
-    @cInclude("SDL3/SDL.h");
-});
+const c_imports = @import("c.zig");
+const c = c_imports.c;
+
+const game_manager = @import("game.zig");
+const drawer = @import("drawer.zig");
+const event_handler = @import("events/sdl_event_handler.zig");
 
 pub fn main() !void {
+    // init SDL video
     if (!c.SDL_Init(c.SDL_INIT_VIDEO)) {
         std.debug.print("SDL_Init Error: {s}\n", .{c.SDL_GetError()});
         return error.SDLInitFailed;
     }
     defer c.SDL_Quit();
 
+    // create window
     const window = c.SDL_CreateWindow(
         "Zig + SDL3",
         800,
@@ -22,6 +27,7 @@ pub fn main() !void {
     }
     defer c.SDL_DestroyWindow(window);
 
+    // create renderer
     const renderer = c.SDL_CreateRenderer(window, null);
     if (renderer == null) {
         std.debug.print("SDL_CreateRenderer Error: {s}\n", .{c.SDL_GetError()});
@@ -29,35 +35,19 @@ pub fn main() !void {
     }
     defer c.SDL_DestroyRenderer(renderer);
 
-    var running = true;
-    var event: c.SDL_Event = undefined;
+    // run loop
+    var game = game_manager.Game.new();
 
-    while (running) {
-        while (c.SDL_PollEvent(&event)) {
-            switch (event.type) {
-                c.SDL_EVENT_QUIT => running = false,
-                c.SDL_EVENT_KEY_DOWN => {
-                    if (event.key.key == c.SDLK_ESCAPE) {
-                        running = false;
-                    }
-                },
-                else => {},
-            }
-        }
+    while (game.running) {
+        // Handle all pending events
+        event_handler.handleEvents(&game);
 
         _ = c.SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);
         _ = c.SDL_RenderClear(renderer);
-        // Draw a triangle: set draw color to white and draw three edges
-        _ = c.SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        const x1 = 400;
-        const y1 = 100;
-        const x2 = 200;
-        const y2 = 500;
-        const x3 = 600;
-        const y3 = 500;
-        _ = c.SDL_RenderLine(renderer, x1, y1, x2, y2);
-        _ = c.SDL_RenderLine(renderer, x2, y2, x3, y3);
-        _ = c.SDL_RenderLine(renderer, x3, y3, x1, y1);
+
+        // Draw a blue filled circle at the center of the window
+        drawer.drawCircle(renderer, 400, 300, 100, drawer.Color.Blue);
+
         _ = c.SDL_RenderPresent(renderer);
 
         c.SDL_Delay(16);

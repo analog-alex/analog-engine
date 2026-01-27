@@ -81,12 +81,12 @@ pub fn drawFilledTriangle(renderer: ?*c.SDL_Renderer, x1: f32, y1: f32, x2: f32,
 }
 
 // Polygon drawing functions
-pub fn drawPolygon(renderer: ?*c.SDL_Renderer, vx: []const i16, vy: []const i16, color: Color) void {
+pub fn drawPolygon(renderer: ?*c.SDL_Renderer, vx: []const i32, vy: []const i32, color: Color) void {
     if (vx.len != vy.len) return;
     _ = c.polygonRGBA(renderer, vx.ptr, vy.ptr, @intCast(vx.len), color.r, color.g, color.b, color.a);
 }
 
-pub fn drawFilledPolygon(renderer: ?*c.SDL_Renderer, vx: []const i16, vy: []const i16, color: Color) void {
+pub fn drawFilledPolygon(renderer: ?*c.SDL_Renderer, vx: []const i32, vy: []const i32, color: Color) void {
     if (vx.len != vy.len) return;
     _ = c.filledPolygonRGBA(renderer, vx.ptr, vy.ptr, @intCast(vx.len), color.r, color.g, color.b, color.a);
 }

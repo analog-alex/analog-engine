@@ -24,10 +24,46 @@ fn handleQuit(game: *Game) void {
 fn handleKeyDown(game: *Game, event: *const c.SDL_Event) void {
     switch (event.key.key) {
         c.SDLK_ESCAPE => game.running = false,
+        c.SDLK_W => updateVerticalVelocity(game),
+        c.SDLK_S => updateVerticalVelocity(game),
+        c.SDLK_A => updateHorizontalVelocity(game),
+        c.SDLK_D => updateHorizontalVelocity(game),
         else => {},
     }
 }
 
-fn handleKeyUp(_: *Game, _: *const c.SDL_Event) void {
-    // Placeholder for future key up handling
+fn handleKeyUp(game: *Game, event: *const c.SDL_Event) void {
+    switch (event.key.key) {
+        c.SDLK_W, c.SDLK_S => updateVerticalVelocity(game),
+        c.SDLK_A, c.SDLK_D => updateHorizontalVelocity(game),
+        else => {},
+    }
+}
+
+fn updateVerticalVelocity(game: *Game) void {
+    const keyboard_state = c.SDL_GetKeyboardState(null);
+    const w_pressed = keyboard_state[c.SDL_SCANCODE_W];
+    const s_pressed = keyboard_state[c.SDL_SCANCODE_S];
+
+    if (w_pressed and !s_pressed) {
+        game.player.updateSpeedY(-game.player.speed);
+    } else if (s_pressed and !w_pressed) {
+        game.player.updateSpeedY(game.player.speed);
+    } else {
+        game.player.updateSpeedY(0);
+    }
+}
+
+fn updateHorizontalVelocity(game: *Game) void {
+    const keyboard_state = c.SDL_GetKeyboardState(null);
+    const a_pressed = keyboard_state[c.SDL_SCANCODE_A];
+    const d_pressed = keyboard_state[c.SDL_SCANCODE_D];
+
+    if (a_pressed and !d_pressed) {
+        game.player.updateSpeedX(-game.player.speed);
+    } else if (d_pressed and !a_pressed) {
+        game.player.updateSpeedX(game.player.speed);
+    } else {
+        game.player.updateSpeedX(0);
+    }
 }

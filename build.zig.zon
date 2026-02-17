@@ -7,6 +7,10 @@
             .url = "https://github.com/allyourcodebase/SDL3/archive/refs/heads/main.tar.gz",
             .hash = "sdl-0.0.0-i4QD0Up9qQCLBJcPR_YpCtGG1hSdL1QiD_OXw4uO5Pi1",
         },
+        .vectors = .{
+            .url = "https://github.com/analog-alex/analog-vectors/archive/refs/tags/v0.0.2.tar.gz",
+            .hash = "vectors-0.0.2-9nGxXe34AwBcxgJau-_0vq6cF1mqp9qc6T2KG9IGXXPq",
+        },
     },
     .paths = .{
         "build.zig",

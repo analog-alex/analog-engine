@@ -20,6 +20,13 @@ pub fn build(b: *std.Build) void {
 
     exe.linkLibrary(sdl_dep.artifact("SDL3"));
 
+    // Add analog-vectors module
+    const vectors_dep = b.dependency("vectors", .{
+        .target = target,
+        .optimize = optimize,
+    });
+    exe.root_module.addImport("vectors", vectors_dep.module("vectors"));
+
     // Add SDL3_gfx source files
     // Use -fwrapv to make signed integer overflow well-defined (wrapping behavior)
     exe.addCSourceFile(.{

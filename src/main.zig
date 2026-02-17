@@ -1,8 +1,6 @@
 const std = @import("std");
-const c_imports = @import("c.zig");
-const c = c_imports.c;
-
-const game_manager = @import("game.zig");
+const c = @import("c.zig").c;
+const g = @import("game.zig");
 
 pub fn main() !void {
     std.debug.print("Starting up...", .{});
@@ -38,13 +36,15 @@ pub fn main() !void {
     std.debug.print("Window created! Boot up game loop.", .{});
 
     var ticks: u64 = c.SDL_GetTicks();
-    var game = game_manager.Game.new();
+    var game = g.Game.new();
 
     while (game.running) {
         // Calc tick diff
         const now = c.SDL_GetTicks();
         const dt: f32 = @as(f32, @floatFromInt(now - ticks)) / 1000.0;
         ticks = now;
+
+        std.debug.print("Frame time: {d:.3}ms ({d:.1}fps)\n", .{ dt * 1000.0, 1.0 / dt });
 
         // Clean up buffer upfront
         _ = c.SDL_SetRenderDrawColor(renderer, 30, 30, 30, 255);
@@ -64,7 +64,7 @@ pub fn main() !void {
         // Update Screen
         _ = c.SDL_RenderPresent(renderer);
 
-        // 60 fps
-        c.SDL_Delay(16);
+        // 120 fps
+        c.SDL_Delay(6);
     }
 }

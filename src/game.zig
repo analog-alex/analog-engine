@@ -1,16 +1,15 @@
 const std = @import("std");
-const c_imports = @import("c.zig");
-const c = c_imports.c;
+const c = @import("c.zig").c;
 
 const event_handler = @import("events/sdl_event_handler.zig");
-const p = @import("entities/player_entity.zig");
+const Player = @import("entities/player_entity.zig").Player;
 
 pub const Game = struct {
     running: bool,
-    player: p.Player,
+    player: Player,
 
     pub fn new() Game {
-        return Game{ .running = true, .player = p.Player.init() };
+        return Game{ .running = true, .player = Player.init() };
     }
 
     pub fn handleInput(self: *Game) void {

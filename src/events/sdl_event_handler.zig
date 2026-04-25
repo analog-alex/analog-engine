@@ -1,4 +1,4 @@
-const c = @import("../c.zig").c;
+const c = @import("c");
 const v = @import("vectors").vec2;
 const Game = @import("../game.zig").Game;
 

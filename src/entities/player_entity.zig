@@ -1,6 +1,6 @@
 const v = @import("vectors").vec2;
 
-const c = @import("../c.zig").c;
+const c = @import("c");
 
 const drawer = @import("../drawer.zig");
 

@@ -1,12 +1,10 @@
-const std = @import("std");
 const c = @import("../c.zig").c;
 const v = @import("vectors").vec2;
 const Game = @import("../game.zig").Game;
 
-var polled_event: c.SDL_Event = undefined;
-
 /// Processes all pending SDL events and updates the game state accordingly
 pub fn handleEvents(game: *Game) void {
+    var polled_event: c.SDL_Event = undefined;
     while (c.SDL_PollEvent(&polled_event)) {
         switch (polled_event.type) {
             c.SDL_EVENT_QUIT => handleQuit(game),

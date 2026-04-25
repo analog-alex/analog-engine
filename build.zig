@@ -17,8 +17,17 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    const sdl_lib = sdl_dep.artifact("SDL3");
 
-    exe.linkLibrary(sdl_dep.artifact("SDL3"));
+    const translate_c = b.addTranslateC(.{
+        .root_source_file = b.path("src/sdl_headers.c"),
+        .target = target,
+        .optimize = optimize,
+    });
+    translate_c.addIncludePath(sdl_lib.getEmittedIncludeTree());
+
+    exe.root_module.linkLibrary(sdl_lib);
+    exe.root_module.addImport("c", translate_c.createModule());
 
     // Add analog-vectors module
     const vectors_dep = b.dependency("vectors", .{
@@ -26,18 +35,6 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     exe.root_module.addImport("vectors", vectors_dep.module("vectors"));
-
-    // Add SDL3_gfx source files
-    // Use -fwrapv to make signed integer overflow well-defined (wrapping behavior)
-    exe.addCSourceFile(.{
-        .file = b.path("vendor/sdl3_gfx/SDL3_gfxPrimitives.c"),
-        .flags = &.{ "-std=c99", "-fwrapv", "-fno-sanitize=undefined" },
-    });
-    exe.addCSourceFile(.{
-        .file = b.path("vendor/sdl3_gfx/SDL3_rotozoom.c"),
-        .flags = &.{ "-std=c99", "-fwrapv", "-fno-sanitize=undefined" },
-    });
-    exe.addIncludePath(b.path("vendor/sdl3_gfx"));
 
     b.installArtifact(exe);
 

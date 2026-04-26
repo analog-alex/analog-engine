@@ -76,18 +76,18 @@ pub fn drawRoundedRect(renderer: ?*c.SDL_Renderer, p1: v.Vec2, p2: v.Vec2, radiu
     drawLineRaw(renderer, x + w, y + r, x + w, y + h - r, color);
 
     const steps: usize = @as(usize, @intCast(@max(8, @as(i32, @intFromFloat(@ceil(r * 0.9))))));
-    var prev_tl = v.from(x + r, y);
-    var prev_tr = v.from(x + w - r, y);
-    var prev_bl = v.from(x, y + h - r);
-    var prev_br = v.from(x + w, y + h - r);
+    var prev_tl = v.init(x + r, y);
+    var prev_tr = v.init(x + w - r, y);
+    var prev_bl = v.init(x, y + h - r);
+    var prev_br = v.init(x + w, y + h - r);
     for (1..(steps + 1)) |i| {
         const t = @as(f32, @floatFromInt(i)) / @as(f32, @floatFromInt(steps));
         const a = t * (std.math.pi * 0.5);
 
-        const tl = v.from(x + r - @cos(a) * r, y + r - @sin(a) * r);
-        const tr = v.from(x + w - r + @sin(a) * r, y + r - @cos(a) * r);
-        const bl = v.from(x + r - @sin(a) * r, y + h - r + @cos(a) * r);
-        const br = v.from(x + w - r + @cos(a) * r, y + h - r + @sin(a) * r);
+        const tl = v.init(x + r - @cos(a) * r, y + r - @sin(a) * r);
+        const tr = v.init(x + w - r + @sin(a) * r, y + r - @cos(a) * r);
+        const bl = v.init(x + r - @sin(a) * r, y + h - r + @cos(a) * r);
+        const br = v.init(x + w - r + @cos(a) * r, y + h - r + @sin(a) * r);
 
         drawLine(renderer, prev_tl, tl, color);
         drawLine(renderer, prev_tr, tr, color);
@@ -165,11 +165,11 @@ pub fn drawEllipse(renderer: ?*c.SDL_Renderer, center: v.Vec2, radii: v.Vec2, co
     }
 
     const steps: usize = @as(usize, @intCast(@max(16, @as(i32, @intFromFloat(@ceil((rx + ry) * 0.5))))));
-    var prev = v.from(v.X(center) + rx, v.Y(center));
+    var prev = v.init(v.X(center) + rx, v.Y(center));
     for (1..(steps + 1)) |i| {
         const t = @as(f32, @floatFromInt(i)) / @as(f32, @floatFromInt(steps));
         const a = t * (2.0 * std.math.pi);
-        const p = v.from(v.X(center) + @cos(a) * rx, v.Y(center) + @sin(a) * ry);
+        const p = v.init(v.X(center) + @cos(a) * rx, v.Y(center) + @sin(a) * ry);
         drawLine(renderer, prev, p, color);
         prev = p;
     }
@@ -272,11 +272,11 @@ pub fn drawCircleOutline(renderer: ?*c.SDL_Renderer, position: v.Vec2, radius: f
     }
 
     const steps: usize = @as(usize, @intCast(@max(16, @as(i32, @intFromFloat(@ceil(r * 1.2))))));
-    var prev = v.from(v.X(position) + r, v.Y(position));
+    var prev = v.init(v.X(position) + r, v.Y(position));
     for (1..(steps + 1)) |i| {
         const t = @as(f32, @floatFromInt(i)) / @as(f32, @floatFromInt(steps));
         const a = t * (2.0 * std.math.pi);
-        const p = v.from(v.X(position) + @cos(a) * r, v.Y(position) + @sin(a) * r);
+        const p = v.init(v.X(position) + @cos(a) * r, v.Y(position) + @sin(a) * r);
         drawLine(renderer, prev, p, color);
         prev = p;
     }

@@ -26,8 +26,8 @@ pub const Player = struct {
         self.position = v.sum(self.position, movement);
 
         // Clamp to screen boundaries
-        const min_bounds = v.from(self.radius, self.radius);
-        const max_bounds = v.from(window_width - self.radius, window_height - self.radius);
+        const min_bounds = v.init(self.radius, self.radius);
+        const max_bounds = v.init(window_width - self.radius, window_height - self.radius);
         self.position = v.clamp(self.position, min_bounds, max_bounds);
     }
 

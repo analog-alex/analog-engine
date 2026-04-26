@@ -9,7 +9,7 @@ pub const Game = struct {
     player: Player,
 
     pub fn new(window_width: f32, window_height: f32) Game {
-        return Game{ .running = true, .player = Player.init(v.from(window_width / 2.0, window_height / 2.0)) };
+        return Game{ .running = true, .player = Player.init(v.init(window_width / 2.0, window_height / 2.0)) };
     }
 
     pub fn handleInput(self: *Game) void {

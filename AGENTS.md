@@ -4,7 +4,8 @@
 - `zig build` compiles and installs the `sdl` executable (default `install` step).
 - `zig build run` builds (if needed) and runs the app.
 - `zig build run -- <args>` forwards CLI args to the app (`b.args` is wired in `build.zig`).
-- `zig build -l` is minimal in this repo: `install`, `uninstall`, `run`.
+- `zig build test` runs the ECS core unit tests (`src/ecs/ecs.zig`).
+- `zig build -l` is minimal in this repo: `install`, `uninstall`, `run`, `test`.
 
 ## Real Entry Points
 - `src/main.zig` is the runtime entry point (SDL init, window/renderer setup, main loop).
@@ -12,6 +13,7 @@
 - `src/events/sdl_event_handler.zig` handles SDL events and player velocity updates.
 - `src/entities/player_entity.zig` contains player movement + bounds clamping.
 - `src/drawer.zig` is the shared drawing utility module.
+- `src/ecs/` is the ECS core (`Entity`, `SparseSet(T)`, `World(ComponentTypes)`, `Query`) — not yet wired into `main.zig`/`game.zig`; the current game loop still uses the hand-rolled `Game`/`Player` structs above. See `src/ecs/ecs.zig` for the module's public surface.
 
 ## Build + Dependency Wiring
 - Dependencies are declared in `build.zig.zon`.
@@ -21,5 +23,5 @@
 - When bumping dependency tarballs, compute the new `.hash` with `zig fetch <tarball-url>` and update `build.zig.zon`.
 
 ## Verification + Repo Quirks
-- There is no repo-level test step in `build.zig` and no `src/` tests; use `zig build` as the primary verification command.
+- `zig build test` covers `src/ecs/`; the SDL-coupled files (`main.zig`, `game.zig`, `events/`, `entities/`, `drawer.zig`) still have no tests, so `zig build` is the primary verification command for those.
 - Generated directories are ignored: `zig-cache/`, `.zig-cache/`, `zig-out/`, `zig-pkg/`.
